@@ -43,6 +43,9 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/J-joon/openpi"
 
+[project.scripts]
+openpi-compute-norm-stats = "openpi.scripts.compute_norm_stats:main"
+
 [dependency-groups]
 dev = [
     "pytest>=8.3.4",
@@ -134,4 +137,4 @@ build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 markers = ["manual: should be run manually."]
-testpaths = ["src", "scripts", "packages"]
+testpaths = ["src", "packages"]
