@@ -559,7 +559,7 @@ class TrainConfig:
         if self.resume and self.overwrite:
             raise ValueError("Cannot resume and overwrite at the same time.")
 
-_CONFIG_REGISTRY: dict[str, TrainConfig] = {}
+_CONFIG_REGISTRY: dict[str, tuple[str, TrainConfig]] = {}
 def register_config(name: str):
     """Decorator to register a config function. Ensures config names are unique."""
     if name in _CONFIG_REGISTRY:
@@ -575,7 +575,7 @@ def register_config(name: str):
         if config.name is tyro.MISSING:
             config = dataclasses.replace(config, name=name)
 
-        _CONFIG_REGISTRY[name] = config
+        _CONFIG_REGISTRY[name] = (name, config)
         return fn
     return decorator
 
