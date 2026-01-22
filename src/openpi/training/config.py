@@ -572,7 +572,7 @@ def register_config(name: str):
              raise ValueError(f"{name} must return a TrainConfig")
 
         # Inject the name into the config object if not set
-        if tyro.is_missing(config.name):
+        if config.name is tyro.MISSING:
             config = dataclasses.replace(config, name=name)
 
         _CONFIG_REGISTRY[name] = config
