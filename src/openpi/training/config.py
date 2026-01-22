@@ -8,6 +8,10 @@ import logging
 import pathlib
 from typing import Any, Literal, Protocol, TypeAlias
 
+import os
+import sys
+import importlib.util
+
 import etils.epath as epath
 import flax.nnx as nnx
 from typing_extensions import override
@@ -979,6 +983,39 @@ def _():
         exp_name="debug_pi05",
         wandb_enabled=False,
     )
+
+def _load_user_configs():
+    """Loads external configs from all .py files in the directory specified by OPENPI_CUSTOM_CONFIGS."""
+    custom_dir = os.environ.get("OPENPI_CUSTOM_CONFIGS")
+    if not custom_dir:
+        return
+
+    path = pathlib.Path(custom_dir)
+    if not path.is_dir():
+        logging.warning(f"OPENPI_CUSTOM_CONFIGS path '{custom_dir}' is not a directory.")
+        return
+
+    # Add the directory to sys.path so modules can import from each other
+    if str(path.absolute()) not in sys.path:
+        sys.path.append(str(path.absolute()))
+
+    # Iterate through all .py files in the directory
+    for config_file in path.glob("*.py"):
+        if config_file.name == "__init__.py":
+            continue
+
+        module_name = f"openpi_user_config_{config_file.stem}"
+        try:
+            spec = importlib.util.spec_from_file_location(module_name, str(config_file))
+            if spec and spec.loader:
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                logging.info(f"Successfully loaded custom configs from {config_file}")
+        except Exception as e:
+            logging.error(f"Failed to load custom configs from {config_file}: {e}")
+
+# Automatically load external configs when this module is imported
+_load_user_configs()
 
 # Use `get_config` if you need to get a config by name in your code.
 
