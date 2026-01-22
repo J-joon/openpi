@@ -44,7 +44,7 @@ dependencies = [
 Repository = "https://github.com/J-joon/openpi"
 
 [project.scripts]
-openpi-compute-norm-stats = "openpi.scripts.compute_norm_stats:main"
+openpi-compute-norm-stats = "openpi.scripts.compute_norm_stats:entrypoint"
 
 [dependency-groups]
 dev = [

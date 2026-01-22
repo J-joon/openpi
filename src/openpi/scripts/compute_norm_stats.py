@@ -112,6 +112,7 @@ def main(config_name: str, max_frames: int | None = None):
     print(f"Writing stats to: {output_path}")
     normalize.save(output_path, norm_stats)
 
-
-if __name__ == "__main__":
+def entrypoint():
     tyro.cli(main)
+if __name__ == "__main__":
+    entrypoint()
