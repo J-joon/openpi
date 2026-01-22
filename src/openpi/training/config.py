@@ -1020,10 +1020,10 @@ _load_user_configs()
 # Use `get_config` if you need to get a config by name in your code.
 
 for config in roboarena_config.get_roboarena_configs():
-    _CONFIG_REGISTRY[config.name] = config
+    _CONFIG_REGISTRY[config.name] = (config.name, config)
 
 for config in polaris_config.get_polaris_configs():
-    _CONFIG_REGISTRY[config.name] = config
+    _CONFIG_REGISTRY[config.name] = (config.name, config)
 
 def cli() -> TrainConfig:
     # This allows tyro to pick from the registry
@@ -1036,4 +1036,4 @@ def get_config(config_name: str) -> TrainConfig:
         closest_str = f" Did you mean '{closest[0]}'? " if closest else ""
         raise ValueError(f"Config '{config_name}' not found.{closest_str}")
 
-    return _CONFIG_REGISTRY[config_name]
+    return _CONFIG_REGISTRY[config_name][1]
