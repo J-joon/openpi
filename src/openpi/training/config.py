@@ -1009,6 +1009,8 @@ def _load_user_configs():
             spec = importlib.util.spec_from_file_location(module_name, str(config_file))
             if spec and spec.loader:
                 module = importlib.util.module_from_spec(spec)
+                # Register module in sys.modules so inspect.getfile works
+                sys.modules[module_name] = module
                 spec.loader.exec_module(module)
                 logging.info(f"Successfully loaded custom configs from {config_file}")
         except Exception as e:
