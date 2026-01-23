@@ -8,6 +8,7 @@ import logging
 import pathlib
 from typing import Any, Literal, Protocol, TypeAlias
 
+import multiprocessing as mp
 import os
 import sys
 import importlib.util
@@ -1017,7 +1018,8 @@ def _load_user_configs():
             logging.error(f"Failed to load custom configs from {config_file}: {e}")
 
 # Automatically load external configs when this module is imported
-_load_user_configs()
+if mp.current_process().name == "MainProcess":
+    _load_user_configs()
 
 # Use `get_config` if you need to get a config by name in your code.
 
